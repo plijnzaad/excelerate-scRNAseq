@@ -13,7 +13,7 @@
 ## go where this script lives:
 cd $(dirname $(readlink -e $BASH_SOURCE))
 
-cd ./session-celltypeid_files/ || exit 55
+cd ./celltypeid_files/ || exit 55
 
 srcdir=$HOME/data/elixir-scrnaseq-course2019/
 

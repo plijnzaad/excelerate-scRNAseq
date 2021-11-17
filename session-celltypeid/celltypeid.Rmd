@@ -50,7 +50,7 @@ If you have (or downloaded) the ovarian data into folder
 ```{r load_ovarian}
 #load expression matrix
 
-data.dir <- "session-celltypeid_files" # or wherever the data is located
+data.dir <- "celltypeid_files" # or wherever the data is located
 file <- paste0(data.dir,"/ovarian1200.rds")
 ovarian <- readRDS(file=file)
 
