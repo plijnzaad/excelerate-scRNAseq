@@ -1,3 +1,6 @@
+---
+layout: default
+---
 # Getting started
 
 In this workshop you will use the classroom computers, so you'll have all the necessary software installed

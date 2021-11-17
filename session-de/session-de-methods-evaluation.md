@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 Differential expression methods evaluation
 ================
 

@@ -1,3 +1,6 @@
+---
+layout: default
+---
 ![logo](logos/excelerate.png)
 
 # Single cell RNA-seq data analysis with R

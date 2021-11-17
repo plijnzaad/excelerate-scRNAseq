@@ -1,3 +1,6 @@
+---
+layout: default
+---
 # Using the course computing environments
 
 You can use the classroom computers where all the necessary software has been installed as a Conda environment. In order to activate the environment

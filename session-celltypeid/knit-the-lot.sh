@@ -1,3 +1,6 @@
 #!/bin/sh
-cd $HOME/git/excelerate-scRNAseq/session-celltypeid
- R -e "rmarkdown::render('celltypeid.Rmd')"
+
+## go where this script lives:
+cd $(dirname $(readlink -e $BASH_SOURCE))
+
+R -e "rmarkdown::render('celltypeid.Rmd', 'all')"

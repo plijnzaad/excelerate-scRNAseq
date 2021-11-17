@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 ![logo](logos/excelerate.png)
 
 ## Lecture recordings

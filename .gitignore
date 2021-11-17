@@ -1,3 +1,7 @@
-*.fastq
-*.fastq.gz
-session-trajectories/data/*
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
+404.html
+Gemfile.lock

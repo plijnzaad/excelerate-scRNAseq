@@ -1,3 +1,6 @@
+---
+layout: default
+---
 Cell type identification
 ================
 
@@ -9,9 +12,8 @@ In any single-cell experiment where mixed populations are expected, a
 very important task is to identify the cell types (and/or cell states)
 that are present. In this practical, we will look at two tools for doing
 this: SingleR ([Aran et
-al. 2019](https://www.nature.com/articles/s41590-018-0276-y)) and
-CHETAH ([de Kanter et al., under
-review](http://dx.doi.org/10.1101/558908)).
+al. 2019](https://www.nature.com/articles/s41590-018-0276-y)) and CHETAH
+([de Kanter et al., under review](http://dx.doi.org/10.1101/558908)).
 
 # Datasets
 
@@ -58,21 +60,19 @@ head(ovarian@meta.data)
 
     ##            nGene  nUMI    orig.ident  celltypes nCount_RNA nFeature_RNA
     ## X7873M.1    3563 11796 SeuratProject Macrophage      11796         3563
-    ## X7873M.104  2670  7570 SeuratProject Macrophage       7570         2670
-    ## X7873M.105  2241  5510 SeuratProject Macrophage       5510         2241
-    ## X7873M.106  4705 22636 SeuratProject        CAF      22636         4705
-    ## X7873M.110  3169 11690 SeuratProject Macrophage      11690         3169
-    ## X7873M.114  4659 20798 SeuratProject Macrophage      20798         4659
+    ## X7873M.10   3442 12026 SeuratProject Macrophage      12026         3442
+    ## X7873M.102  5176 22370 SeuratProject Macrophage      22370         5176
+    ## X7873M.108  2836  8267 SeuratProject Macrophage       8267         2836
+    ## X7873M.112  2168  4798 SeuratProject    Unknown       4798         2168
+    ## X7873M.118  5292 18172 SeuratProject Macrophage      18172         5292
 
 ``` r
 sort(table(ovarian@meta.data$celltypes))
 ```
 
     ## 
-    ## reg. T cell      B cell         CAF  CD8 T cell          NK   Dendritic 
-    ##           0           7           9          10          28          46 
-    ##     Unknown       Tumor  CD4 T cell  Macrophage 
-    ##          50         117         129         804
+    ## reg. T cell      B cell         CAF  CD8 T cell          NK     Unknown   Dendritic       Tumor  CD4 T cell  Macrophage 
+    ##           0           5          10          12          42          43          49         114         126         799
 
 Clearly, most of the cells are Macrophages.
 
@@ -93,40 +93,40 @@ ovarian <- RunPCA(object = ovarian, npcs=20)
 ```
 
     ## PC_ 1 
-    ## Positive:  KRT19, TACSTD2, SLPI, KRT18, LCN2, KRT7, CRYAB, TM4SF1, MAL2, S100A16 
-    ##     PXDN, WFDC2, MUC4, CLDN1, C19orf33, KRT18P55, GNG12, CLDN4, UCA1, PERP 
-    ##     MDK, KLK6, CNN3, CLDN3, KIAA1522, DCBLD2, TSPAN1, NBL1, CTTN, SCNN1A 
-    ## Negative:  FTL, HLA-DRA, LYZ, VCAN, S100A8, VSIG4, FABP5, HLA-DRB1, SPP1, HLA-DPA1 
-    ##     MARCO, HLA-DPB1, CTSL, HLA-DQB1, CD36, CCL2, CTSB, TIMP1, C1QA, S100A9 
-    ##     EPB41L3, FGR, LGMN, RNASE1, CD300E, SELL, CLEC5A, IFI6, HLA-DQA1, OLR1 
+    ## Positive:  HLA-DRA, FTL, LYZ, HLA-DPA1, FABP5, S100A8, VSIG4, MARCO, SPP1, HLA-DPB1 
+    ##     CTSL, HLA-DQB1, CCL2, CTSB, TIMP1, NPL, SELL, LGMN, S100A9, OLR1 
+    ##     FN1, RNASE1, C1QA, HLA-DQA1, RGCC, DAB2, FPR3, C1QB, PLAC8, LYVE1 
+    ## Negative:  TACSTD2, KRT19, KRT18, SLPI, LCN2, KRT18P55, TM4SF1, KRT7, MAL2, CRYAB 
+    ##     MUC4, KLK6, WFDC2, S100A16, CLDN1, CLDN4, PXDN, MDK, DHCR24, CLDN3 
+    ##     UCA1, NBL1, PERP, ASS1, GNG12, C19orf33, DCBLD2, VSTM2L, EPCAM, SCNN1A 
     ## PC_ 2 
-    ## Positive:  EGFL6, C1S, C1R, CEMIP, CALB2, SPARC, ANXA8, COL3A1, C4B, C4A 
-    ##     ANXA8L1, COL1A2, PTGIS, COL6A1, XXbac-BPG116M5.17, MXRA8, IGFBP4, GJA1, CFB, GRIA2 
-    ##     MGP, SOD3, MEDAG, COL5A2, CALD1, RARRES2, CCDC80, ALDH1A2, CD248, PLA2G2A 
-    ## Negative:  TACSTD2, LCN2, MUC4, UCA1, MAL2, CAMK2N1, LAD1, CLDN4, SPINT1, VSTM2L 
-    ##     MAL, CLDN3, SCNN1A, KLK6, TSPAN1, SPOCK2, CCND1, ELF3, EPCAM, RAB25 
-    ##     MUC20, CD24, NTN4, KRT80, PRSS8, KLK7, SMIM22, BHLHE41, PERP, KRT23 
+    ## Positive:  LCN2, MUC4, TACSTD2, KLK6, VSTM2L, CAMK2N1, SCNN1A, UCA1, CLDN4, MAL 
+    ##     INHBB, TSPAN1, MAL2, MUC20, CLDN3, FOLR1, C19orf33, SPOCK2, NTN4, KLK5 
+    ##     KRT4, SPINT1, S100A14, KRT80, LAD1, EPCAM, RAB25, LMO7, KLK7, GJB3 
+    ## Negative:  C1S, COL3A1, CALB2, SPARC, C1R, COL5A2, COL1A2, ANXA8, EGFL6, LOX 
+    ##     PTGIS, COL6A1, C4B, CEMIP, ALDH1A2, C4A, ANXA8L1, PAPPA, IGFBP4, MYH10 
+    ##     COL5A1, XXbac-BPG116M5.17, C1QL1, CFB, PROCR, HAS1, FAM101A, GAS1, KDR, MEDAG 
     ## PC_ 3 
-    ## Positive:  CTSB, CTSL, FTL, VSIG4, FABP5, MARCO, SPP1, CTSD, TIMP1, PLTP 
-    ##     FN1, S100A9, RNASE1, CCL2, VCAN, FTH1, C1QA, ANXA2, S100A8, C1QB 
-    ##     C1QC, LGMN, HLA-DRB1, LYVE1, IFI6, HLA-DRA, DAB2, GPNMB, LYZ, EPB41L3 
-    ## Negative:  LTB, TRBC2, IL32, IFITM1, TRBC1, MIAT, IL7R, SLC38A1, TRAC, CCL5 
-    ##     BCL11B, GZMK, SPOCK2, GZMB, CXCR4, IL2RB, CD2, JCHAIN, FYN, SELL 
-    ##     DERL3, GZMA, LILRA4, CCR7, ITM2C, C12orf75, IGKC, CST7, KLRB1, PIM2 
+    ## Positive:  CTSB, FTL, CTSL, VSIG4, FABP5, SPP1, MARCO, CTSD, PLTP, TIMP1 
+    ##     FN1, C1QA, RNASE1, ANXA2, C1QB, NPL, C1QC, CCL2, FTH1, S100A9 
+    ##     LGMN, S100A8, DAB2, LYVE1, APOE, SDC3, IDH1, GPNMB, LYZ, APOC1 
+    ## Negative:  LTB, IFITM1, TRBC2, TRBC1, GZMB, SLC38A1, MIAT, IL7R, SELL, TRAC 
+    ##     JCHAIN, CCL5, IGKC, CD2, GZMA, IL2RB, GZMK, BCL11B, CXCR4, LILRA4 
+    ##     SPOCK2, C12orf75, DERL3, CCR7, SERPINF1, SMPD3, PLD4, EIF4B, ITM2C, SCAMP5 
     ## PC_ 4 
-    ## Positive:  TUBB2B, UCHL1, MYBL2, UBE2C, CTHRC1, CRABP2, PEG10, TPX2, CKS1B, CDKN2A 
-    ##     AURKB, CKB, KIFC1, PRC1, TYMS, TK1, CDCA8, TOP2A, IGFBP2, MEX3A 
-    ##     STMN1, NOV, PTTG1, CDK1, MKI67, SMPDL3B, CENPM, CDC20, ANLN, PLAU 
-    ## Negative:  VSTM2L, C10orf10, PDZK1IP1, CAMK2N1, LMO7, MUC4, MSLN, MUC21, VWA5A, GPRC5A 
-    ##     LCN2, MAL, FXYD3, MESP1, DHRS9, SPOCK2, SAT1, C3, AHNAK, TGM2 
-    ##     CD55, KLK11, HOPX, TTC9, MUC20, C1orf116, SNCG, EVPL, GPC1, FAM3C 
+    ## Positive:  UCHL1, TUBB2B, PEG10, CTHRC1, MYBL2, IGFBP2, ADGRL2, SQLE, TOP2A, STMN1 
+    ##     CRABP2, FBLN1, KIFC1, CKB, CKS1B, UBE2C, SIX3, RRM2, AURKB, TYMS 
+    ##     KIF1A, CDC20, PTTG1, HMGCS1, C12orf75, CDCA8, TPD52L1, CDK1, MKI67, ANLN 
+    ## Negative:  VSTM2L, PDZK1IP1, C3, MUC4, MSLN, C10orf10, KLK11, LMO7, DHRS9, TGM2 
+    ##     CAMK2N1, VWA5A, MAL, GPRC5A, LCN2, LY6E, SPOCK2, PXDN, CFB, VGLL1 
+    ##     KRT4, XXbac-BPG116M5.17, DPP6, AHNAK, FAM83A, NTN4, IFI27, MUC20, SNCG, FOLR1 
     ## PC_ 5 
-    ## Positive:  DERL3, GZMB, LILRA4, JCHAIN, SERPINF1, PLD4, IGKC, IRF8, TSPAN13, IRF7 
-    ##     TCF4, SCAMP5, CYB561A3, LRRC26, ITM2C, SMPD3, LAMP5, HLA-DPA1, HLA-DRA, CCDC50 
-    ##     IGHM, GPM6B, TCL1A, PLAC8, HLA-DPB1, IL3RA, HLA-DQA1, HLA-DRB1, C12orf75, HLA-DQB1 
-    ## Negative:  MTRNR2L12, MTRNR2L8, IL32, TRBC2, MIAT, IL7R, TRBC1, BCL11B, MTRNR2L1, CCL5 
-    ##     TRAC, MT-ND4L, IFITM1, GZMK, IL2RB, MTRNR2L6, SPOCK2, CD2, MTRNR2L3, GZMA 
-    ##     NEAT1, KLRB1, CDKN2A, ITM2A, FYN, CD8A, MTRNR2L11, SIX3, ARL4C, UCHL1
+    ## Positive:  IFITM1, TRBC2, CCL5, MIAT, TRBC1, IL2RB, GZMA, IL7R, GZMK, TRAC 
+    ##     BCL11B, CD2, HMGB2, SPOCK2, PRF1, RARRES3, UCHL1, PRKCH, KLRB1, ITM2A 
+    ##     IGFBP2, NKG7, ITK, PEG10, MT-ND4L, CDKN2A, CD8A, GNLY, CTHRC1, TUBB2B 
+    ## Negative:  JCHAIN, GZMB, IGKC, LILRA4, PLD4, DERL3, SERPINF1, TSPAN13, IRF8, IRF7 
+    ##     SCAMP5, LRRC26, CYB561A3, CCDC50, SMPD3, TCF4, UGCG, PACSIN1, TCL1A, GPM6B 
+    ##     PLAC8, HLA-DRA, ITM2C, PTGDS, HLA-DPA1, C12orf75, IGHM, PPM1J, HLA-DPB1, HLA-DQB1
 
 ``` r
 ovarian <- FindNeighbors(object = ovarian)
@@ -143,17 +143,41 @@ ovarian <- FindClusters(object = ovarian, resolution=0.5)
     ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
     ## 
     ## Number of nodes: 1200
-    ## Number of edges: 37767
+    ## Number of edges: 38517
     ## 
     ## Running Louvain algorithm...
-    ## Maximum modularity in 10 random starts: 0.8624
-    ## Number of communities: 9
+    ## Maximum modularity in 10 random starts: 0.8547
+    ## Number of communities: 8
     ## Elapsed time: 0 seconds
 
 ``` r
 ## (the default resolution yields too manh clusters)
 ovarian <- RunTSNE(object = ovarian)
 ovarian <- RunUMAP(object = ovarian, dims=1:20)
+```
+
+    ## 10:23:37 UMAP embedding parameters a = 0.9922 b = 1.112
+
+    ## 10:23:37 Read 1200 rows and found 20 numeric columns
+
+    ## 10:23:37 Using Annoy for neighbor search, n_neighbors = 30
+
+    ## 10:23:37 Building Annoy index with metric = cosine, n_trees = 50
+
+    ## 0%   10   20   30   40   50   60   70   80   90   100%
+
+    ## [----|----|----|----|----|----|----|----|----|----|
+
+    ## **************************************************|
+    ## 10:23:37 Writing NN index file to temp file /var/folders/3w/96qhhcf50z1g9k0fhrh6j7j80000gp/T//RtmpnxwsKY/file1d9e72b01a6a
+    ## 10:23:37 Searching Annoy index using 1 thread, search_k = 3000
+    ## 10:23:37 Annoy recall = 100%
+    ## 10:23:38 Commencing smooth kNN distance calibration using 1 thread
+    ## 10:23:39 Initializing from normalized Laplacian + noise
+    ## 10:23:39 Commencing optimization for 500 epochs, with 48074 positive edges
+    ## 10:23:41 Optimization finished
+
+``` r
 p1 <- DimPlot(ovarian, reduction='tsne')
 p2 <- DimPlot(ovarian, reduction='umap')
 plot_grid(p1, p2)
@@ -190,432 +214,107 @@ Project (microarray-based) and `mouse.rnaseq`, a brain specific
 reference (RNASeq-based). For details I refer to the
 SingleR-specifications vignette.
 
-Each reference data set comes in two ‘flavours’: ‘types’, which are very
-fine-grained, detailed types, and ‘main\_types’, which are less coarser
+Each reference data set comes in two ‘flavours’: ‘label.fine’, which are
+very fine-grained, detailed types, and ‘label.main’, which are a coarser
 subset of those types.
 
 The SingleR reference data sets are part of the package, and can be
 explored easily.
 
 ``` r
-table(hpca$main_types)
+warning("now using celldex!")
 ```
 
-    ## 
-    ##            Astrocyte                   BM           BM & Prog. 
-    ##                    2                    7                    1 
-    ##               B_cell                  CMP         Chondrocytes 
-    ##                   26                    2                    8 
-    ##                   DC Embryonic_stem_cells    Endothelial_cells 
-    ##                   88                   17                   64 
-    ##     Epithelial_cells         Erythroblast          Fibroblasts 
-    ##                   16                    8                   10 
-    ##                  GMP          Gametocytes           HSC_-G-CSF 
-    ##                    2                    5                   10 
-    ##            HSC_CD34+          Hepatocytes        Keratinocytes 
-    ##                    6                    3                   25 
-    ##                  MEP                  MSC           Macrophage 
-    ##                    2                    9                   90 
-    ##             Monocyte            Myelocyte              NK_cell 
-    ##                   60                    2                    5 
-    ## Neuroepithelial_cell              Neurons           Neutrophil 
-    ##                    1                   16                    3 
-    ##          Neutrophils          Osteoblasts            Platelets 
-    ##                   18                   15                    5 
-    ##     Pre-B_cell_CD34-     Pro-B_cell_CD34+        Pro-Myelocyte 
-    ##                    2                    2                    2 
-    ##  Smooth_muscle_cells              T_cells    Tissue_stem_cells 
-    ##                   16                   68                   55 
-    ##            iPS_cells 
-    ##                   42
+    ## Warning: now using celldex!
 
 ``` r
-table(hpca$types)
+library(celldex)
 ```
 
     ## 
-    ##                  Astrocyte:Embryonic_stem_cell-derived 
-    ##                                                      2 
-    ##                                                     BM 
-    ##                                                      8 
-    ##                                                 B_cell 
-    ##                                                      4 
-    ##                              B_cell:CXCR4+_centroblast 
-    ##                                                      4 
-    ##                               B_cell:CXCR4-_centrocyte 
-    ##                                                      4 
-    ##                                 B_cell:Germinal_center 
-    ##                                                      3 
-    ##                                          B_cell:Memory 
-    ##                                                      3 
-    ##                                           B_cell:Naive 
-    ##                                                      3 
-    ##                                     B_cell:Plasma_cell 
-    ##                                                      3 
-    ##                                        B_cell:immature 
-    ##                                                      2 
-    ##                                                    CMP 
-    ##                                                      2 
-    ##                               Chondrocytes:MSC-derived 
-    ##                                                      8 
-    ##                                    DC:monocyte-derived 
-    ##                                                     19 
-    ##         DC:monocyte-derived:A._fumigatus_germ_tubes_6h 
-    ##                                                      2 
-    ##                    DC:monocyte-derived:AEC-conditioned 
-    ##                                                      5 
-    ##                              DC:monocyte-derived:AM580 
-    ##                                                      3 
-    ##                              DC:monocyte-derived:CD40L 
-    ##                                                      3 
-    ##                         DC:monocyte-derived:Galectin-1 
-    ##                                                      3 
-    ##                                DC:monocyte-derived:LPS 
-    ##                                                      6 
-    ##                           DC:monocyte-derived:Poly(IC) 
-    ##                                                      3 
-    ##                  DC:monocyte-derived:Schuler_treatment 
-    ##                                                      3 
-    ##                    DC:monocyte-derived:anti-DC-SIGN_2h 
-    ##                                                      3 
-    ##                    DC:monocyte-derived:antiCD40/VAF347 
-    ##                                                      2 
-    ##                           DC:monocyte-derived:immature 
-    ##                                                     20 
-    ##                             DC:monocyte-derived:mature 
-    ##                                                     11 
-    ##                      DC:monocyte-derived:rosiglitazone 
-    ##                                                      3 
-    ##            DC:monocyte-derived:rosiglitazone/AGN193109 
-    ##                                                      2 
-    ##                                   Embryonic_stem_cells 
-    ##                                                     17 
-    ##                                Endothelial_cells:HUVEC 
-    ##                                                     16 
-    ##                Endothelial_cells:HUVEC:B._anthracis_LT 
-    ##                                                      2 
-    ##           Endothelial_cells:HUVEC:Borrelia_burgdorferi 
-    ##                                                      2 
-    ##                   Endothelial_cells:HUVEC:FPV-infected 
-    ##                                                      3 
-    ##                  Endothelial_cells:HUVEC:H5N1-infected 
-    ##                                                      3 
-    ##                           Endothelial_cells:HUVEC:IFNg 
-    ##                                                      1 
-    ##                          Endothelial_cells:HUVEC:IL-1b 
-    ##                                                      3 
-    ##                   Endothelial_cells:HUVEC:PR8-infected 
-    ##                                                      3 
-    ##                Endothelial_cells:HUVEC:Serum_Amyloid_A 
-    ##                                                      6 
-    ##                           Endothelial_cells:HUVEC:VEGF 
-    ##                                                      3 
-    ##                         Endothelial_cells:blood_vessel 
-    ##                                                      8 
-    ##                            Endothelial_cells:lymphatic 
-    ##                                                      7 
-    ##                       Endothelial_cells:lymphatic:KSHV 
-    ##                                                      4 
-    ##                   Endothelial_cells:lymphatic:TNFa_48h 
-    ##                                                      3 
-    ##                               Epithelial_cells:bladder 
-    ##                                                      6 
-    ##                             Epithelial_cells:bronchial 
-    ##                                                     10 
-    ##                                           Erythroblast 
-    ##                                                      8 
-    ##                                     Fibroblasts:breast 
-    ##                                                      6 
-    ##                                   Fibroblasts:foreskin 
-    ##                                                      4 
-    ##                                                    GMP 
-    ##                                                      2 
-    ##                                     Gametocytes:oocyte 
-    ##                                                      3 
-    ##                               Gametocytes:spermatocyte 
-    ##                                                      2 
-    ##                                             HSC_-G-CSF 
-    ##                                                     10 
-    ##                                              HSC_CD34+ 
-    ##                                                      6 
-    ##                                            Hepatocytes 
-    ##                                                      3 
-    ##                                          Keratinocytes 
-    ##                                                      3 
-    ##                                     Keratinocytes:IFNg 
-    ##                                                      2 
-    ##                                     Keratinocytes:IL19 
-    ##                                                      3 
-    ##                                     Keratinocytes:IL1b 
-    ##                                                      2 
-    ##                                     Keratinocytes:IL20 
-    ##                                                      3 
-    ##                                     Keratinocytes:IL22 
-    ##                                                      3 
-    ##                                     Keratinocytes:IL24 
-    ##                                                      3 
-    ##                                     Keratinocytes:IL26 
-    ##                                                      3 
-    ##                                      Keratinocytes:KGF 
-    ##                                                      3 
-    ##                                                    MEP 
-    ##                                                      2 
-    ##                                                    MSC 
-    ##                                                      9 
-    ##                                    Macrophage:Alveolar 
-    ##                                                      4 
-    ##                 Macrophage:Alveolar:B._anthacis_spores 
-    ##                                                      3 
-    ##                            Macrophage:monocyte-derived 
-    ##                                                     26 
-    ##                       Macrophage:monocyte-derived:IFNa 
-    ##                                                      9 
-    ##              Macrophage:monocyte-derived:IL-4/Dex/TGFb 
-    ##                                                     10 
-    ##             Macrophage:monocyte-derived:IL-4/Dex/cntrl 
-    ##                                                      5 
-    ##                  Macrophage:monocyte-derived:IL-4/TGFb 
-    ##                                                      5 
-    ##                 Macrophage:monocyte-derived:IL-4/cntrl 
-    ##                                                      5 
-    ##                      Macrophage:monocyte-derived:M-CSF 
-    ##                                                      2 
-    ##                 Macrophage:monocyte-derived:M-CSF/IFNg 
-    ##                                                      2 
-    ##         Macrophage:monocyte-derived:M-CSF/IFNg/Pam3Cys 
-    ##                                                      2 
-    ##              Macrophage:monocyte-derived:M-CSF/Pam3Cys 
-    ##                                                      2 
-    ##                  Macrophage:monocyte-derived:S._aureus 
-    ##                                                     15 
-    ##                                               Monocyte 
-    ##                                                     27 
-    ##                                         Monocyte:CD14+ 
-    ##                                                      3 
-    ##                                         Monocyte:CD16+ 
-    ##                                                      6 
-    ##                                         Monocyte:CD16- 
-    ##                                                      7 
-    ##                                         Monocyte:CXCL4 
-    ##                                                      2 
-    ##                        Monocyte:F._tularensis_novicida 
-    ##                                                      6 
-    ##                                          Monocyte:MCSF 
-    ##                                                      2 
-    ##                      Monocyte:S._typhimurium_flagellin 
-    ##                                                      1 
-    ##                                  Monocyte:anti-FcgRIIB 
-    ##                                                      2 
-    ##                                Monocyte:leukotriene_D4 
-    ##                                                      4 
-    ##                                              Myelocyte 
-    ##                                                      2 
-    ##                                                NK_cell 
-    ##                                                      1 
-    ##                                   NK_cell:CD56hiCD62L+ 
-    ##                                                      1 
-    ##                                            NK_cell:IL2 
-    ##                                                      3 
-    ##                       Neuroepithelial_cell:ESC-derived 
-    ##                                                      1 
-    ##               Neurons:ES_cell-derived_neural_precursor 
-    ##                                                      6 
-    ##                                   Neurons:Schwann_cell 
-    ##                                                      4 
-    ##                      Neurons:adrenal_medulla_cell_line 
-    ##                                                      6 
-    ##                                             Neutrophil 
-    ##                                                      6 
-    ##                                 Neutrophil:GM-CSF_IFNg 
-    ##                                                      4 
-    ##                                         Neutrophil:LPS 
-    ##                                                      4 
-    ##                    Neutrophil:commensal_E._coli_MG1655 
-    ##                                                      2 
-    ##                                      Neutrophil:inflam 
-    ##                                                      4 
-    ##                 Neutrophil:uropathogenic_E._coli_UTI89 
-    ##                                                      1 
-    ##                                            Osteoblasts 
-    ##                                                      9 
-    ##                                       Osteoblasts:BMP2 
-    ##                                                      6 
-    ##                                              Platelets 
-    ##                                                      5 
-    ##                                       Pre-B_cell_CD34- 
-    ##                                                      2 
-    ##                                       Pro-B_cell_CD34+ 
-    ##                                                      2 
-    ##                                          Pro-Myelocyte 
-    ##                                                      2 
-    ##                          Smooth_muscle_cells:bronchial 
-    ##                                                      3 
-    ##                    Smooth_muscle_cells:bronchial:vit_D 
-    ##                                                      3 
-    ##                     Smooth_muscle_cells:umbilical_vein 
-    ##                                                      2 
-    ##                           Smooth_muscle_cells:vascular 
-    ##                                                      5 
-    ##                     Smooth_muscle_cells:vascular:IL-17 
-    ##                                                      3 
-    ##                T_cell:CCR10+CLA+1,25(OH)2_vit_D3/IL-12 
-    ##                                                      1 
-    ##                T_cell:CCR10-CLA+1,25(OH)2_vit_D3/IL-12 
-    ##                                                      1 
-    ##                                            T_cell:CD4+ 
-    ##                                                     12 
-    ##                                      T_cell:CD4+_Naive 
-    ##                                                      6 
-    ##                             T_cell:CD4+_central_memory 
-    ##                                                      5 
-    ##                            T_cell:CD4+_effector_memory 
-    ##                                                      4 
-    ##                                            T_cell:CD8+ 
-    ##                                                     16 
-    ##                             T_cell:CD8+_Central_memory 
-    ##                                                      3 
-    ##                            T_cell:CD8+_effector_memory 
-    ##                                                      4 
-    ##                         T_cell:CD8+_effector_memory_RA 
-    ##                                                      4 
-    ##                                      T_cell:CD8+_naive 
-    ##                                                      4 
-    ##                                      T_cell:Treg:Naive 
-    ##                                                      2 
-    ##                                        T_cell:effector 
-    ##                                                      4 
-    ##                                     T_cell:gamma-delta 
-    ##                                                      2 
-    ##                               Tissue_stem_cells:BM_MSC 
-    ##                                                      8 
-    ##                          Tissue_stem_cells:BM_MSC:BMP2 
-    ##                                                     12 
-    ##                         Tissue_stem_cells:BM_MSC:TGFb3 
-    ##                                                     11 
-    ##                    Tissue_stem_cells:BM_MSC:osteogenic 
-    ##                                                      8 
-    ##                          Tissue_stem_cells:CD326-CD56+ 
-    ##                                                      3 
-    ##              Tissue_stem_cells:adipose-derived_MSC_AM3 
-    ##                                                      2 
-    ##                          Tissue_stem_cells:dental_pulp 
-    ##                                                      6 
-    ##                            Tissue_stem_cells:iliac_MSC 
-    ##                                                      3 
-    ##                   Tissue_stem_cells:lipoma-derived_MSC 
-    ##                                                      2 
-    ##                             iPS_cells:CRL2097_foreskin 
-    ##                                                      3 
-    ##    iPS_cells:CRL2097_foreskin-derived:d20_hepatic_diff 
-    ##                                                      3 
-    ##             iPS_cells:CRL2097_foreskin-derived:undiff. 
-    ##                                                      3 
-    ##                           iPS_cells:PDB_1lox-17Puro-10 
-    ##                                                      1 
-    ##                            iPS_cells:PDB_1lox-17Puro-5 
-    ##                                                      1 
-    ##                           iPS_cells:PDB_1lox-21Puro-20 
-    ##                                                      1 
-    ##                           iPS_cells:PDB_1lox-21Puro-26 
-    ##                                                      1 
-    ##                                  iPS_cells:PDB_2lox-17 
-    ##                                                      1 
-    ##                                  iPS_cells:PDB_2lox-21 
-    ##                                                      1 
-    ##                                  iPS_cells:PDB_2lox-22 
-    ##                                                      1 
-    ##                                   iPS_cells:PDB_2lox-5 
-    ##                                                      1 
-    ##                              iPS_cells:PDB_fibroblasts 
-    ##                                                      1 
-    ##         iPS_cells:adipose_stem_cell-derived:lentiviral 
-    ##                                                      3 
-    ## iPS_cells:adipose_stem_cell-derived:minicircle-derived 
-    ##                                                      3 
-    ##                           iPS_cells:adipose_stem_cells 
-    ##                                                      3 
-    ##        iPS_cells:fibroblast-derived:Direct_del._reprog 
-    ##                                                      2 
-    ##         iPS_cells:fibroblast-derived:Retroviral_transf 
-    ##                                                      1 
-    ##                                  iPS_cells:fibroblasts 
-    ##                                                      1 
-    ##                          iPS_cells:foreskin_fibrobasts 
-    ##                                                      1 
-    ##                       iPS_cells:iPS:minicircle-derived 
-    ##                                                      5 
-    ##                              iPS_cells:skin_fibroblast 
-    ##                                                      2 
-    ##                      iPS_cells:skin_fibroblast-derived 
-    ##                                                      3
+    ## Attaching package: 'celldex'
+
+    ## The following objects are masked from 'package:SingleR':
+    ## 
+    ##     BlueprintEncodeData, DatabaseImmuneCellExpressionData, HumanPrimaryCellAtlasData, ImmGenData, MonacoImmuneData, MouseRNAseqData, NovershternHematopoieticData
 
 ``` r
-table(blueprint_encode$main_types)
+hpca <- HumanPrimaryCellAtlasData()
 ```
 
-    ## 
-    ##        Adipocytes           B-cells      CD4+ T-cells      CD8+ T-cells 
-    ##                11                 8                14                 5 
-    ##      Chondrocytes                DC Endothelial cells       Eosinophils 
-    ##                 2                 1                26                 1 
-    ##  Epithelial cells      Erythrocytes       Fibroblasts               HSC 
-    ##                18                 7                20                38 
-    ##     Keratinocytes       Macrophages       Melanocytes   Mesangial cells 
-    ##                 2                25                 4                 2 
-    ##         Monocytes          Myocytes          NK cells           Neurons 
-    ##                16                 4                 3                 4 
-    ##       Neutrophils         Pericytes   Skeletal muscle     Smooth muscle 
-    ##                23                 2                 7                16
+    ## snapshotDate(): 2021-10-19
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
 
 ``` r
-table(blueprint_encode$types)
+table(hpca$label.main)
 ```
 
     ## 
-    ##                    Adipocytes                    Astrocytes 
-    ##                             7                             2 
-    ##                  CD4+ T-cells                      CD4+ Tcm 
-    ##                            11                             1 
-    ##                      CD4+ Tem                  CD8+ T-cells 
-    ##                             1                             3 
-    ##                      CD8+ Tcm                      CD8+ Tem 
-    ##                             1                             1 
-    ##                           CLP                           CMP 
-    ##                             5                            11 
-    ##                  Chondrocytes Class-switched memory B-cells 
-    ##                             2                             1 
-    ##                            DC             Endothelial cells 
-    ##                             1                            18 
-    ##                   Eosinophils              Epithelial cells 
-    ##                             1                            18 
-    ##                  Erythrocytes                   Fibroblasts 
-    ##                             7                            20 
-    ##                           GMP                           HSC 
-    ##                             3                             6 
-    ##                 Keratinocytes                           MEP 
-    ##                             2                             4 
-    ##                           MPP                   Macrophages 
-    ##                             4                            18 
-    ##                Macrophages M1                Macrophages M2 
-    ##                             3                             4 
-    ##                Megakaryocytes                   Melanocytes 
-    ##                             5                             4 
-    ##                Memory B-cells               Mesangial cells 
-    ##                             1                             2 
-    ##                     Monocytes                      Myocytes 
-    ##                            16                             4 
-    ##                      NK cells                       Neurons 
-    ##                             3                             4 
-    ##                   Neutrophils                     Pericytes 
-    ##                            23                             2 
-    ##                  Plasma cells                 Preadipocytes 
-    ##                             4                             2 
-    ##               Skeletal muscle                 Smooth muscle 
-    ##                             7                            16 
-    ##                         Tregs          mv Endothelial cells 
-    ##                             1                             8 
-    ##                 naive B-cells 
-    ##                             2
+    ##            Astrocyte                   BM           BM & Prog.               B_cell                  CMP         Chondrocytes                   DC Embryonic_stem_cells    Endothelial_cells     Epithelial_cells         Erythroblast          Fibroblasts                  GMP          Gametocytes           HSC_-G-CSF            HSC_CD34+          Hepatocytes        Keratinocytes                  MEP                  MSC           Macrophage             Monocyte            Myelocyte              NK_cell Neuroepithelial_cell              Neurons          Neutrophils          Osteoblasts            Platelets     Pre-B_cell_CD34-     Pro-B_cell_CD34+        Pro-Myelocyte  Smooth_muscle_cells              T_cells    Tissue_stem_cells            iPS_cells 
+    ##                    2                    7                    1                   26                    2                    8                   88                   17                   64                   16                    8                   10                    2                    5                   10                    6                    3                   25                    2                    9                   90                   60                    2                    5                    1                   16                   21                   15                    5                    2                    2                    2                   16                   68                   55                   42
+
+``` r
+table(hpca$label.fine)
+```
+
+    ## 
+    ##                  Astrocyte:Embryonic_stem_cell-derived                                                     BM                                                 B_cell                              B_cell:CXCR4+_centroblast                               B_cell:CXCR4-_centrocyte                                 B_cell:Germinal_center                                          B_cell:Memory                                           B_cell:Naive                                     B_cell:Plasma_cell                                        B_cell:immature                                                    CMP                               Chondrocytes:MSC-derived                                    DC:monocyte-derived         DC:monocyte-derived:A._fumigatus_germ_tubes_6h                    DC:monocyte-derived:AEC-conditioned                              DC:monocyte-derived:AM580                              DC:monocyte-derived:CD40L                         DC:monocyte-derived:Galectin-1 
+    ##                                                      2                                                      8                                                      4                                                      4                                                      4                                                      3                                                      3                                                      3                                                      3                                                      2                                                      2                                                      8                                                     19                                                      2                                                      5                                                      3                                                      3                                                      3 
+    ##                                DC:monocyte-derived:LPS                           DC:monocyte-derived:Poly(IC)                  DC:monocyte-derived:Schuler_treatment                    DC:monocyte-derived:anti-DC-SIGN_2h                    DC:monocyte-derived:antiCD40/VAF347                           DC:monocyte-derived:immature                             DC:monocyte-derived:mature                      DC:monocyte-derived:rosiglitazone            DC:monocyte-derived:rosiglitazone/AGN193109                                   Embryonic_stem_cells                                Endothelial_cells:HUVEC                Endothelial_cells:HUVEC:B._anthracis_LT           Endothelial_cells:HUVEC:Borrelia_burgdorferi                   Endothelial_cells:HUVEC:FPV-infected                  Endothelial_cells:HUVEC:H5N1-infected                           Endothelial_cells:HUVEC:IFNg                          Endothelial_cells:HUVEC:IL-1b                   Endothelial_cells:HUVEC:PR8-infected 
+    ##                                                      6                                                      3                                                      3                                                      3                                                      2                                                     20                                                     11                                                      3                                                      2                                                     17                                                     16                                                      2                                                      2                                                      3                                                      3                                                      1                                                      3                                                      3 
+    ##                Endothelial_cells:HUVEC:Serum_Amyloid_A                           Endothelial_cells:HUVEC:VEGF                         Endothelial_cells:blood_vessel                            Endothelial_cells:lymphatic                       Endothelial_cells:lymphatic:KSHV                   Endothelial_cells:lymphatic:TNFa_48h                               Epithelial_cells:bladder                             Epithelial_cells:bronchial                                           Erythroblast                                     Fibroblasts:breast                                   Fibroblasts:foreskin                                                    GMP                                     Gametocytes:oocyte                               Gametocytes:spermatocyte                                             HSC_-G-CSF                                              HSC_CD34+                                            Hepatocytes                                          Keratinocytes 
+    ##                                                      6                                                      3                                                      8                                                      7                                                      4                                                      3                                                      6                                                     10                                                      8                                                      6                                                      4                                                      2                                                      3                                                      2                                                     10                                                      6                                                      3                                                      3 
+    ##                                     Keratinocytes:IFNg                                     Keratinocytes:IL19                                     Keratinocytes:IL1b                                     Keratinocytes:IL20                                     Keratinocytes:IL22                                     Keratinocytes:IL24                                     Keratinocytes:IL26                                      Keratinocytes:KGF                                                    MEP                                                    MSC                                    Macrophage:Alveolar                 Macrophage:Alveolar:B._anthacis_spores                            Macrophage:monocyte-derived                       Macrophage:monocyte-derived:IFNa              Macrophage:monocyte-derived:IL-4/Dex/TGFb             Macrophage:monocyte-derived:IL-4/Dex/cntrl                  Macrophage:monocyte-derived:IL-4/TGFb                 Macrophage:monocyte-derived:IL-4/cntrl 
+    ##                                                      2                                                      3                                                      2                                                      3                                                      3                                                      3                                                      3                                                      3                                                      2                                                      9                                                      4                                                      3                                                     26                                                      9                                                     10                                                      5                                                      5                                                      5 
+    ##                      Macrophage:monocyte-derived:M-CSF                 Macrophage:monocyte-derived:M-CSF/IFNg         Macrophage:monocyte-derived:M-CSF/IFNg/Pam3Cys              Macrophage:monocyte-derived:M-CSF/Pam3Cys                  Macrophage:monocyte-derived:S._aureus                                               Monocyte                                         Monocyte:CD14+                                         Monocyte:CD16+                                         Monocyte:CD16-                                         Monocyte:CXCL4                        Monocyte:F._tularensis_novicida                                          Monocyte:MCSF                      Monocyte:S._typhimurium_flagellin                                  Monocyte:anti-FcgRIIB                                Monocyte:leukotriene_D4                                              Myelocyte                                                NK_cell                                   NK_cell:CD56hiCD62L+ 
+    ##                                                      2                                                      2                                                      2                                                      2                                                     15                                                     27                                                      3                                                      6                                                      7                                                      2                                                      6                                                      2                                                      1                                                      2                                                      4                                                      2                                                      1                                                      1 
+    ##                                            NK_cell:IL2                       Neuroepithelial_cell:ESC-derived               Neurons:ES_cell-derived_neural_precursor                                   Neurons:Schwann_cell                      Neurons:adrenal_medulla_cell_line                                             Neutrophil                                 Neutrophil:GM-CSF_IFNg                                         Neutrophil:LPS                    Neutrophil:commensal_E._coli_MG1655                                      Neutrophil:inflam                 Neutrophil:uropathogenic_E._coli_UTI89                                            Osteoblasts                                       Osteoblasts:BMP2                                              Platelets                                       Pre-B_cell_CD34-                                       Pro-B_cell_CD34+                                          Pro-Myelocyte                          Smooth_muscle_cells:bronchial 
+    ##                                                      3                                                      1                                                      6                                                      4                                                      6                                                      6                                                      4                                                      4                                                      2                                                      4                                                      1                                                      9                                                      6                                                      5                                                      2                                                      2                                                      2                                                      3 
+    ##                    Smooth_muscle_cells:bronchial:vit_D                     Smooth_muscle_cells:umbilical_vein                           Smooth_muscle_cells:vascular                     Smooth_muscle_cells:vascular:IL-17                T_cell:CCR10+CLA+1,25(OH)2_vit_D3/IL-12                T_cell:CCR10-CLA+1,25(OH)2_vit_D3/IL-12                                            T_cell:CD4+                                      T_cell:CD4+_Naive                             T_cell:CD4+_central_memory                            T_cell:CD4+_effector_memory                                            T_cell:CD8+                             T_cell:CD8+_Central_memory                            T_cell:CD8+_effector_memory                         T_cell:CD8+_effector_memory_RA                                      T_cell:CD8+_naive                                      T_cell:Treg:Naive                                        T_cell:effector                                     T_cell:gamma-delta 
+    ##                                                      3                                                      2                                                      5                                                      3                                                      1                                                      1                                                     12                                                      6                                                      5                                                      4                                                     16                                                      3                                                      4                                                      4                                                      4                                                      2                                                      4                                                      2 
+    ##                               Tissue_stem_cells:BM_MSC                          Tissue_stem_cells:BM_MSC:BMP2                         Tissue_stem_cells:BM_MSC:TGFb3                    Tissue_stem_cells:BM_MSC:osteogenic                          Tissue_stem_cells:CD326-CD56+              Tissue_stem_cells:adipose-derived_MSC_AM3                          Tissue_stem_cells:dental_pulp                            Tissue_stem_cells:iliac_MSC                   Tissue_stem_cells:lipoma-derived_MSC                             iPS_cells:CRL2097_foreskin    iPS_cells:CRL2097_foreskin-derived:d20_hepatic_diff             iPS_cells:CRL2097_foreskin-derived:undiff.                           iPS_cells:PDB_1lox-17Puro-10                            iPS_cells:PDB_1lox-17Puro-5                           iPS_cells:PDB_1lox-21Puro-20                           iPS_cells:PDB_1lox-21Puro-26                                  iPS_cells:PDB_2lox-17                                  iPS_cells:PDB_2lox-21 
+    ##                                                      8                                                     12                                                     11                                                      8                                                      3                                                      2                                                      6                                                      3                                                      2                                                      3                                                      3                                                      3                                                      1                                                      1                                                      1                                                      1                                                      1                                                      1 
+    ##                                  iPS_cells:PDB_2lox-22                                   iPS_cells:PDB_2lox-5                              iPS_cells:PDB_fibroblasts         iPS_cells:adipose_stem_cell-derived:lentiviral iPS_cells:adipose_stem_cell-derived:minicircle-derived                           iPS_cells:adipose_stem_cells        iPS_cells:fibroblast-derived:Direct_del._reprog         iPS_cells:fibroblast-derived:Retroviral_transf                                  iPS_cells:fibroblasts                          iPS_cells:foreskin_fibrobasts                       iPS_cells:iPS:minicircle-derived                              iPS_cells:skin_fibroblast                      iPS_cells:skin_fibroblast-derived 
+    ##                                                      1                                                      1                                                      1                                                      3                                                      3                                                      3                                                      2                                                      1                                                      1                                                      1                                                      5                                                      2                                                      3
+
+``` r
+bpe <- BlueprintEncodeData()
+```
+
+    ## snapshotDate(): 2021-10-19
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
+
+``` r
+table(bpe$label.main)
+```
+
+    ## 
+    ##        Adipocytes        Astrocytes           B-cells      CD4+ T-cells      CD8+ T-cells      Chondrocytes                DC Endothelial cells       Eosinophils  Epithelial cells      Erythrocytes       Fibroblasts               HSC     Keratinocytes       Macrophages       Melanocytes   Mesangial cells         Monocytes          Myocytes          NK cells           Neurons       Neutrophils         Pericytes   Skeletal muscle     Smooth muscle 
+    ##                 9                 2                 8                14                 5                 2                 1                26                 1                18                 7                20                38                 2                25                 4                 2                16                 4                 3                 4                23                 2                 7                16
+
+``` r
+table(bpe$label.fine)
+```
+
+    ## 
+    ##                    Adipocytes                    Astrocytes                  CD4+ T-cells                      CD4+ Tcm                      CD4+ Tem                  CD8+ T-cells                      CD8+ Tcm                      CD8+ Tem                           CLP                           CMP                  Chondrocytes Class-switched memory B-cells                            DC             Endothelial cells                   Eosinophils              Epithelial cells                  Erythrocytes                   Fibroblasts                           GMP                           HSC                 Keratinocytes                           MEP                           MPP                   Macrophages                Macrophages M1                Macrophages M2                Megakaryocytes                   Melanocytes                Memory B-cells               Mesangial cells                     Monocytes                      Myocytes                      NK cells 
+    ##                             7                             2                            11                             1                             1                             3                             1                             1                             5                            11                             2                             1                             1                            18                             1                            18                             7                            20                             3                             6                             2                             4                             4                            18                             3                             4                             5                             4                             1                             2                            16                             4                             3 
+    ##                       Neurons                   Neutrophils                     Pericytes                  Plasma cells                 Preadipocytes               Skeletal muscle                 Smooth muscle                         Tregs          mv Endothelial cells                 naive B-cells 
+    ##                             4                            23                             2                             4                             2                             7                            16                             1                             8                             2
 
 ## Using SingleR with other reference data sets
 
@@ -641,9 +340,9 @@ ready-made object (`chetah.ref.singler`).
 
 The layout of the reference data is quite simple: a `list` with the name
 of the reference, a big data matrix (genes x celltypes), and the types
-per cell, both in a detailed version (`$types`) and the simple version
-(`$main_types`) For the CHETAH reference we duplicated the (`$types`)
-and the simple version (`$main_types`). (Note that the
+per cell, both in a detailed version (`$label.fine`) and the simple
+version (`$label.main`) For the CHETAH reference we duplicated the
+(`$types`) and the simple version (`$main_types`). (Note that the
 `chetah.ref.singler` reference object can only be used by SingleR, not
 by CHETAH).
 
@@ -655,9 +354,7 @@ chetah.ref.singler <- readRDS(file=file)
 unique(chetah.ref.singler$main_types)
 ```
 
-    ##  [1] "B cell"        "Macrophage"    "NK"            "CAF"          
-    ##  [5] "Myofibroblast" "Endothelial"   "CD4 T cell"    "CD8 T cell"   
-    ##  [9] "reg. T cell"   "Mast"          "Dendritic"     "Plasma"
+    ##  [1] "B cell"        "Macrophage"    "NK"            "CAF"           "Myofibroblast" "Endothelial"   "CD4 T cell"    "CD8 T cell"    "reg. T cell"   "Mast"          "Dendritic"     "Plasma"
 
 ``` r
 # layout of the object:
@@ -681,58 +378,24 @@ same time; this saves time and memory.
 On to the actual classification with SingleR.
 
 ``` r
-counts <- GetAssayData(ovarian)
-
-singler <- CreateSinglerObject(counts=counts,
-  project.name="excelerate course", # choose
-  min.genes = 200, # ignore cells with fewer than 200 transcripts
-  technology = "CEL-Seq2", # choose
-  species = "Human",
-  citation = "Schelker et al. 2017", # choose
-  ref.list = list(hpca=hpca, bpe=blueprint_encode, snglr_chetah=chetah.ref.singler),
-  normalize.gene.length = FALSE,        # needed for full-length platforms (e.g. smartseq)
-  variable.genes = "de",  # see vignette
-  fine.tune = FALSE, # TRUE would take very long
-  reduce.file.size = TRUE, # leave out less-often used fields 
-  do.signatures = FALSE,
-  do.main.types = TRUE,
-  numCores = SingleR.numCores)
+hpca <- HumanPrimaryCellAtlasData()
 ```
 
-    ## [1] "Dimensions of counts data: 25462x1200"
-    ## [1] "Annotating data with HPCA..."
-    ## [1] "Variable genes method: de"
-    ## [1] "Number of DE genes:4401"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:4401"
-    ## [1] "Number of clusters: 10"
-    ## [1] "Annotating data with HPCA (Main types)..."
-    ## [1] "Number of DE genes:3312"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:3312"
-    ## [1] "Number of clusters: 10"
-    ## [1] "Annotating data with Blueprint_Encode..."
-    ## [1] "Variable genes method: de"
-    ## [1] "Number of DE genes:3756"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:3756"
-    ## [1] "Number of clusters: 10"
-    ## [1] "Annotating data with Blueprint_Encode (Main types)..."
-    ## [1] "Number of DE genes:3183"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:3183"
-    ## [1] "Number of clusters: 10"
-    ## [1] "Annotating data with CHETAH reference..."
-    ## [1] "Variable genes method: de"
-    ## [1] "Number of DE genes:1682"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:1682"
-    ## [1] "Number of clusters: 10"
-    ## [1] "Annotating data with CHETAH reference (Main types)..."
-    ## [1] "Number of DE genes:1682"
-    ## [1] "Number of cells: 1200"
-    ## [1] "Number of DE genes:1682"
-    ## [1] "Number of clusters: 10"
+    ## snapshotDate(): 2021-10-19
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
+
+    ## see ?celldex and browseVignettes('celldex') for documentation
+
+    ## loading from cache
+
+``` r
+counts <- GetAssayData(ovarian, assay="RNA", slot="data")
+
+singler <- SingleR(test=counts, ref=hpca, labels=hpca$label.main)
+```
 
 The `ref.list` argument specified a named list with three different
 reference data sets: HPCA, blueprint\_encode (‘bpe’) and the bulkified
@@ -748,791 +411,46 @@ To get a good overview it’s easiest to iterate over all elements of this
 list.
 
 ``` r
-show(names(singler$singler))
+show(table(singler$first.labels))
 ```
 
-    ## [1] "hpca"         "bpe"          "snglr_chetah"
-
-``` r
-for (ref.set in names(singler$singler) ) {
-  types <- singler$singler[[ref.set]]$SingleR.single.main$labels[,1]
-  cat("==== ", ref.set, ": ====\n")
-  show(sort(table(types), decreasing=TRUE))
-}
-```
-
-    ## ====  hpca : ====
-    ## types
-    ##             Monocyte           Macrophage              T_cells 
-    ##                  528                  277                  142 
-    ##     Epithelial_cells              NK_cell     Pre-B_cell_CD34- 
-    ##                  109                   42                   39 
-    ##                   DC               B_cell  Smooth_muscle_cells 
-    ##                   18                    9                    9 
-    ##          Fibroblasts           HSC_-G-CSF Embryonic_stem_cells 
-    ##                    7                    5                    3 
-    ##          Neutrophils                  GMP              Neurons 
-    ##                    3                    2                    2 
-    ##            iPS_cells                  MEP            Platelets 
-    ##                    2                    1                    1 
-    ##     Pro-B_cell_CD34+ 
-    ##                    1 
-    ## ====  bpe : ====
-    ## types
-    ##       Macrophages         Monocytes      CD4+ T-cells  Epithelial cells 
-    ##               521               301               118               107 
-    ##           B-cells      CD8+ T-cells          NK cells                DC 
-    ##                50                41                28                 9 
-    ##   Mesangial cells       Fibroblasts        Adipocytes       Eosinophils 
-    ##                 8                 6                 4                 2 
-    ##         Pericytes Endothelial cells               HSC       Neutrophils 
-    ##                 2                 1                 1                 1 
-    ## ====  snglr_chetah : ====
-    ## types
-    ##    Macrophage    CD4 T cell   Endothelial        B cell            NK 
-    ##           830           139            94            42            28 
-    ##           CAF    CD8 T cell     Dendritic Myofibroblast        Plasma 
-    ##            20            20            15             9             3
+    ## 
+    ##               B_cell                   DC Embryonic_stem_cells     Epithelial_cells          Fibroblasts                  GMP           HSC_-G-CSF                  MEP                  MSC           Macrophage             Monocyte              NK_cell          Neutrophils            Platelets     Pre-B_cell_CD34-     Pro-B_cell_CD34+  Smooth_muscle_cells              T_cells            iPS_cells 
+    ##                   12                   22                    1                  103                    4                    1                    5                    1                    1                  268                  528                   55                    1                    1                   40                    1                    8                  142                    6
 
 ``` r
 ## For hpca and blueprint_encode also show the 
 ## detailed cell typings (as opposed to main_types results) : 
 
-for (ref.set in c("hpca", "bpe") ) {
-  types <- singler$singler[[ref.set]]$SingleR.single$labels[,1]
-  subrefset <- paste(ref.set, "subtypes", sep="_") 
-  cat("==== ", subrefset, ": ====\n")
-  show(sort(table(types), decreasing=TRUE))
-}
-```
 
-    ## ====  hpca_subtypes : ====
-    ## types
-    ##                        Monocyte:leukotriene_D4 
-    ##                                            197 
-    ##              Macrophage:monocyte-derived:M-CSF 
-    ##                                            144 
-    ##      Macrophage:monocyte-derived:IL-4/Dex/TGFb 
-    ##                                            112 
-    ##     Macrophage:monocyte-derived:IL-4/Dex/cntrl 
-    ##                                            109 
-    ##                     T_cell:CD4+_central_memory 
-    ##                                             95 
-    ##                                 Monocyte:CD16- 
-    ##                                             92 
-    ##                       Epithelial_cells:bladder 
-    ##                                             57 
-    ##                     Epithelial_cells:bronchial 
-    ##                                             47 
-    ##                                 Monocyte:CD14+ 
-    ##                                             36 
-    ##                               Pre-B_cell_CD34- 
-    ##                                             34 
-    ##                    T_cell:CD4+_effector_memory 
-    ##                                             29 
-    ##         Macrophage:monocyte-derived:M-CSF/IFNg 
-    ##                                             28 
-    ##            DC:monocyte-derived:AEC-conditioned 
-    ##                                             25 
-    ##                          Monocyte:anti-FcgRIIB 
-    ##                                             23 
-    ##                                        NK_cell 
-    ##                                             22 
-    ##                                 Monocyte:CD16+ 
-    ##                                             19 
-    ##                                    NK_cell:IL2 
-    ##                                             15 
-    ##                                    T_cell:CD4+ 
-    ##                                             11 
-    ##                    Macrophage:monocyte-derived 
-    ##                                              9 
-    ##                                       Monocyte 
-    ##                                              8 
-    ##              Monocyte:S._typhimurium_flagellin 
-    ##                                              7 
-    ##                              T_cell:CD4+_Naive 
-    ##                                              7 
-    ##                                B_cell:immature 
-    ##                                              6 
-    ##             Smooth_muscle_cells:vascular:IL-17 
-    ##                                              6 
-    ##                     DC:monocyte-derived:mature 
-    ##                                              4 
-    ##      Macrophage:monocyte-derived:M-CSF/Pam3Cys 
-    ##                                              4 
-    ##                           NK_cell:CD56hiCD62L+ 
-    ##                                              4 
-    ##                   Smooth_muscle_cells:vascular 
-    ##                                              4 
-    ##                                    T_cell:CD8+ 
-    ##                                              4 
-    ##                                   B_cell:Naive 
-    ##                                              3 
-    ##                      DC:monocyte-derived:AM580 
-    ##                                              3 
-    ##                             Fibroblasts:breast 
-    ##                                              3 
-    ##          Macrophage:monocyte-derived:IL-4/TGFb 
-    ##                                              3 
-    ##            Neutrophil:commensal_E._coli_MG1655 
-    ##                                              3 
-    ##               iPS_cells:iPS:minicircle-derived 
-    ##                                              3 
-    ##                                  B_cell:Memory 
-    ##                                              2 
-    ##            DC:monocyte-derived:anti-DC-SIGN_2h 
-    ##                                              2 
-    ##           Endothelial_cells:lymphatic:TNFa_48h 
-    ##                                              2 
-    ##                                     HSC_-G-CSF 
-    ##                                              2 
-    ##                              T_cell:Treg:Naive 
-    ##                                              2 
-    ##                       B_cell:CXCR4-_centrocyte 
-    ##                                              1 
-    ##                             B_cell:Plasma_cell 
-    ##                                              1 
-    ##                            DC:monocyte-derived 
-    ##                                              1 
-    ##            DC:monocyte-derived:antiCD40/VAF347 
-    ##                                              1 
-    ##                                            GMP 
-    ##                                              1 
-    ##                                            MSC 
-    ##                                              1 
-    ##                            Macrophage:Alveolar 
-    ##                                              1 
-    ## Macrophage:monocyte-derived:M-CSF/IFNg/Pam3Cys 
-    ##                                              1 
-    ##          Macrophage:monocyte-derived:S._aureus 
-    ##                                              1 
-    ##                                 Monocyte:CXCL4 
-    ##                                              1 
-    ##                               Osteoblasts:BMP2 
-    ##                                              1 
-    ##                             T_cell:gamma-delta 
-    ##                                              1 
-    ##     iPS_cells:CRL2097_foreskin-derived:undiff. 
-    ##                                              1 
-    ##                   iPS_cells:PDB_1lox-21Puro-26 
-    ##                                              1 
-    ## ====  bpe_subtypes : ====
-    ## types
-    ##                   Macrophages                     Monocytes 
-    ##                           567                           249 
-    ##              Epithelial cells                  CD4+ T-cells 
-    ##                           101                            42 
-    ##                      CD4+ Tcm                Memory B-cells 
-    ##                            41                            34 
-    ##                      CD4+ Tem                      NK cells 
-    ##                            31                            26 
-    ##                      CD8+ Tem                      CD8+ Tcm 
-    ##                            21                            13 
-    ##               Mesangial cells                         Tregs 
-    ##                            13                            12 
-    ##                            DC                    Adipocytes 
-    ##                            10                             7 
-    ##                 naive B-cells                   Fibroblasts 
-    ##                             6                             5 
-    ##                Macrophages M1                  Plasma cells 
-    ##                             4                             4 
-    ## Class-switched memory B-cells                           CLP 
-    ##                             3                             2 
-    ##             Endothelial cells                           HSC 
-    ##                             2                             2 
-    ##                  CD8+ T-cells                  Chondrocytes 
-    ##                             1                             1 
-    ##                   Eosinophils                Macrophages M2 
-    ##                             1                             1 
-    ##                   Neutrophils 
-    ##                             1
-
-We will stick to the `main_types` from now on, for brevity. In order to
-easily visualize the various classifications in the tSNE plots we have
-to add them to `meta.data` slot of the Seurat object:
-
-``` r
-for (ref.set in names(singler$singler) ) {
-  types <- singler$singler[[ref.set]]$SingleR.single.main$labels[,1]
-  ovarian <- AddMetaData(ovarian,
-                         metadata=types,
-                         col.name=paste0(ref.set,"_type" ) )
-}
-
-## Check if this worked and get an impression of the concordance of classification
-
-interesting.columns <- c("celltypes", "hpca_type", "bpe_type", "snglr_chetah_type")
-
-## repeat the following a few times:
-random.rows <- sort(sample(ncol(ovarian), size=20))
-ovarian@meta.data[ random.rows,  interesting.columns]
-```
-
-    ##              celltypes        hpca_type         bpe_type snglr_chetah_type
-    ## X7873M.31   Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7873M.413  Macrophage         Monocyte      Macrophages        Macrophage
-    ## X7873M.455  Macrophage         Monocyte        Monocytes        Macrophage
-    ## X7873M.462  Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7873M.785  Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7882M.547  Macrophage         Monocyte      Macrophages        Macrophage
-    ## X7882M.550   Dendritic Pre-B_cell_CD34-          B-cells            B cell
-    ## X7882M.582     Unknown          NK_cell     CD4+ T-cells        CD4 T cell
-    ## X7882M.746  Macrophage         Monocyte        Monocytes        Macrophage
-    ## X7882M.838  Macrophage         Monocyte        Monocytes        Macrophage
-    ## X7892M.300  Macrophage         Monocyte      Macrophages        Macrophage
-    ## X7892M.447  Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7892M.482  Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7892M.545  Macrophage         Monocyte      Macrophages        Macrophage
-    ## X7990M2.245      Tumor Epithelial_cells Epithelial cells       Endothelial
-    ## X7990M2.34  Macrophage       Macrophage      Macrophages        Macrophage
-    ## X7990M2.343      Tumor Epithelial_cells Epithelial cells       Endothelial
-    ## X7990M2.455 Macrophage         Monocyte        Monocytes        Macrophage
-    ## X7990M2.466 Macrophage         Monocyte      Macrophages        Macrophage
-    ## X7990M2.82  CD4 T cell          T_cells     CD4+ T-cells        CD4 T cell
-
-Things seem largely concordant, now start plotting them.
-
-``` r
-panel.labels <- c('publ','hpca','bpe','chet') #shorthand labels
-
-p1 <- DimPlot(ovarian, group.by="celltypes", label_size=6, reduction=dim.red)
-p2 <- DimPlot(ovarian, group.by='hpca_type', label_size=6, reduction=dim.red)
-p3 <- DimPlot(ovarian, group.by='bpe_type', label_size=6, reduction=dim.red)
-p4 <- DimPlot(ovarian, group.by='snglr_chetah_type', label_size=6, reduction=dim.red)
-plot_grid(p1, p2, p3, p4, nrow=2, ncol=2, labels=panel.labels)
-```
-
-![](celltypeid_files/figure-gfm/compare_singler_diffrefs-1.png)<!-- -->
-
-This looks reasonable, but the colors are a bit messy. To see things
-better it may be better to highlight the cell type of interest (but note
-that the type names differ per reference set\!\!). The Seurat function
-`WhichCells` is a bit too limited to find cells by ‘any old meta data’,
-so it’s easier to use a little function to automatically find the cells
-that have a particular type:
-
-``` r
-findCells <- function(obj, column, values, name=NULL) {
-  ## Given a Seurat OBJ, return a list with the names of the cells where
-  ## the specified meta.data COLUMN equals any of the strings specified
-  ## in VALUES (both must be characters or factors). Name of the list member
-  ## must be specified using the NAME argument if length(values)>1
-  stopifnot(is(obj, "Seurat"))
-  stopifnot(is.character(column))
-  stopifnot(column %in% names(obj@meta.data))
-  col <- obj@meta.data[[column]]
-  stopifnot(is.character(col) || is.factor(col))
-  values <- unique(values)
-  stopifnot(is.character(values) || is.factor(values))
-  if (length(values)>1 && is.null(name))
-    stop("findCells: specify a name to be used for the selection")
-  if(is.null(name))
-    name <- values
-  stopifnot(is.character(name))
-  rem <- setdiff(c(values), col)
-  if(length(rem)>0)stop("findCells: requested value(s) never occurs in this column: ", rem)
-  l <- list(colnames(obj)[ col %in% values ])
-  names(l) <- name
-  l
-}                                       #findCells
-
-## "Let's look at the macrophages. This is the biggest group
-p1 <- DimPlot(ovarian, group.by="celltypes", reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'celltypes', 'Macrophage'))
-p2 <- DimPlot(ovarian, group.by='hpca_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'hpca_type', 'Macrophage'))
-p3 <- DimPlot(ovarian, group.by='bpe_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'bpe_type', 'Macrophages'))
-p4 <- DimPlot(ovarian, group.by='snglr_chetah_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'snglr_chetah_type', 'Macrophage'))
-plot_grid(p1, p2, p3, p4, nrow=2, ncol=2, labels=paste(panel.labels, "Macrophage"))
-```
-
-![](celltypeid_files/figure-gfm/plot_highlights_macrophages-1.png)<!-- -->
-
-No suprises there really. Note that monocytes (found by HPCA) are
-precursors to macrophages, but are called differently. That’s why there
-are relatively fewer macrophages in the `hpca` plot.
-
-This ‘missing-things-that-are-too-specific’ is more prominent for the B
-cells as identified by SingleR using the four different references:
-
-``` r
-p1 <- DimPlot(ovarian, group.by="celltypes", reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'celltypes', 'B cell'))
-p2 <- DimPlot(ovarian, group.by='hpca_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'hpca_type', 'B_cell'))
-p3 <- DimPlot(ovarian, group.by='bpe_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'bpe_type', 'B-cells'))
-p4 <- DimPlot(ovarian, group.by='snglr_chetah_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'snglr_chetah_type', 'B cell'))
-plot_grid(p1, p2, p3, p4, nrow=2, ncol=2, labels=paste(panel.labels, "B cell"))
-```
-
-![](celltypeid_files/figure-gfm/plot_highlights_Bcells-1.png)<!-- -->
-
-bpe and singlr\_chetah find more B-cells than the original publication,
-HPCA roughly the same. The reason is that HPCA has two more B-cell
-subtypes which were missed. We can lump them together (`findCells()` can
-handle it) by including the ‘Pre-B\_cell\_CD34-’ and
-‘Pro-B\_cell\_CD34+’ cells, and calling the combination ‘B-like’ :
-
-``` r
-p2 <- DimPlot(ovarian, group.by='hpca_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'hpca_type',
-                 c('B_cell', 'Pre-B_cell_CD34-', 'Pro-B_cell_CD34+'),
-                 name="B-like"))
-plot_grid(p1, p2, p3, p4, nrow=2, ncol=2, labels=paste(panel.labels, "all B cell"))
-```
-
-![](celltypeid_files/figure-gfm/plot_highlights_allBcells-1.png)<!-- -->
-
-It looks like in the original publication quite a few B(-like) cells
-were missed. The opposite may be the case for the dendritic cells: the
-publication assigns quite a few of them, which is a bit unusual in that
-these tissue-residing cells are relatively rare in fluids such as blood
-and ascites. Are the authors right?
-
-``` r
-p1 <- DimPlot(ovarian, group.by="celltypes", reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'celltypes', 'Dendritic'))
-p2 <- DimPlot(ovarian, group.by='hpca_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'hpca_type', 'DC'))
-p3 <- DimPlot(ovarian, group.by='bpe_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'bpe_type', 'DC'))
-p4 <- DimPlot(ovarian, group.by='snglr_chetah_type', reduction=dim.red,
-               cells.highlight=findCells(ovarian, 'snglr_chetah_type', 'Dendritic'))
-plot_grid(p1, p2, p3, p4, nrow=2, ncol=2, labels=paste(panel.labels, "Dendritic"))
-```
-
-![](celltypeid_files/figure-gfm/plot_highlights_dendritic-1.png)<!-- -->
-
-I guess the jury is out, but more on that later.
-
-Feel free to play around with a few more cell types. In particular, have
-a good look at where the tumor cells are. You will find that there are 4
-clusters. I’m pretty sure each cluster derive from a different patient.
-
-### Discrepancies
-
-A nice way to view any discrepancies is to split the cells by one
-classification, and color them by another (and perhaps vice versa). If
-there are no discrepancies, each sub-plot has cells of one color. (you
-can try this by using the same cell typing for both the `split.by` and
-`group.by` arguments).
-
-``` r
-DimPlot(ovarian, split.by='celltypes', group.by='snglr_chetah_type', reduction=dim.red)
-```
-
-![](celltypeid_files/figure-gfm/plot_discrepancies-1.png)<!-- -->
-
-``` r
-## and also in reverse:
-
-DimPlot(ovarian, group.by='celltypes', split.by='snglr_chetah_type', reduction=dim.red)
-```
-
-![](celltypeid_files/figure-gfm/plot_discrepancies-2.png)<!-- -->
-
-# CHETAH
-
-## CHETAH reference
-
-Our second method, CHETAH, differs from SingleR in that it uses a
-reference in which each cell type is represented by a few hundred
-single-cells of that type, allowing a well-founded estimate of the
-confidence with which a cell type call can be made. We already worked
-with a ‘bulkified’ version of this reference in the previous section.
-
-CHETAH is part of Bioconductor, and therefore uses
-`SingleCellExperiment` objects, both for the data to be classified (the
-‘input’) as well as for the reference data. The latter is simply a
-data set that has `celltypes` as one of its `colData()` columns.
-
-Let’s look at this reference.
-
-``` r
-file <- paste0(data.dir,"/chetah.ref.rds") 
-chetah.ref <- readRDS(file=file)
-
-show(unique(chetah.ref.singler$types)) # the bulkified reference we've used
-```
-
-    ##  [1] "B cell"        "Macrophage"    "NK"            "CAF"          
-    ##  [5] "Myofibroblast" "Endothelial"   "CD4 T cell"    "CD8 T cell"   
-    ##  [9] "reg. T cell"   "Mast"          "Dendritic"     "Plasma"
-
-``` r
-show(colData(chetah.ref)) # the CHETAH tumor reference data
-```
-
-    ## DataFrame with 6122 rows and 1 column
-    ##                                       celltypes
-    ##                                     <character>
-    ## HN25_P24_B12_S120_comb                   B cell
-    ## HN25_P5_E03_S51_comb                     B cell
-    ## HNSCC26_P24_A06_S294_comb                B cell
-    ## HNSCC25_P2_H06_S90_comb                  B cell
-    ## HNSCC28_P12_A04_S196_comb                B cell
-    ## ...                                         ...
-    ## CY88CD45POS_2_H10_S478_comb              Plasma
-    ## CY94CD45POS_1_H04_S184_comb              Plasma
-    ## CY88CD45POS_7_C05_S221_comb              Plasma
-    ## CY94_CD45NEG_CD90POS_2_B04_S16_comb      Plasma
-    ## CY94_CD45NEG_CD90POS_2_E09_S57_comb      Plasma
-
-``` r
-show(sort(table(colData(chetah.ref)$celltypes), decreasing=TRUE))
-```
-
-    ## 
-    ##    CD8 T cell    CD4 T cell        B cell Myofibroblast           CAF 
-    ##          1643          1044           769           693           685 
-    ##   Endothelial    Macrophage   reg. T cell        Plasma          Mast 
-    ##           360           225           225           164           126 
-    ##     Dendritic            NK 
-    ##           101            87
-
-## Classifying with SingleR
-
-The data to be classified also must be cast as a `SingleCellExperiment`.
-You can use Seurat’s `as.SingleCellExperiment()` function for that.
-Classifying is a matter of calling `CHETAHclassifier()` with the input
-and the reference as arguments (although there are loads of options, see
-the man page). Classification takes a bit longer than SingleR
-
-``` r
-ovarian.sce <- as.SingleCellExperiment(ovarian)
-    
-ovarian.sce <-  CHETAHclassifier(input=ovarian.sce,
-                                 ref_cells = chetah.ref)
-```
-
-    ## Preparing data....
-
-    ## Running analysis...
-
-Let’s explore the results. You’ll notice an extra column
-`celltype_CHETAH` in the `colData`, and things are still by and large
-concordant, with one exception: CHETAH uses the odd ‘Unassigned’ and
-‘Node3’, ‘Node7’ etc. type. The largest group, as expected, is again
-Macrophage
-
-(Note: the `snglr_chetah_type` column is the SingleR classification
-using the bulkified CHETAH reference, whereas the `celltype_CHETAH`
-column is the CHETAH classifcation using the CHETAH reference.)
-
-``` r
-names(colData(ovarian.sce))
-```
-
-    ##  [1] "nGene"             "nUMI"              "orig.ident"       
-    ##  [4] "celltypes"         "nCount_RNA"        "nFeature_RNA"     
-    ##  [7] "RNA_snn_res.0.5"   "seurat_clusters"   "hpca_type"        
-    ## [10] "bpe_type"          "snglr_chetah_type" "ident"            
-    ## [13] "celltype_CHETAH"
-
-``` r
-interesting.columns <- c("celltypes", "hpca_type", "bpe_type", "snglr_chetah_type", "celltype_CHETAH")
-
-## repeat the following a few times
-random.rows <- sort(sample(ncol(ovarian), size=20))
-colData(ovarian.sce)[ random.rows,  interesting.columns]
-```
-
-    ## DataFrame with 20 rows and 5 columns
-    ##              celltypes   hpca_type     bpe_type snglr_chetah_type
-    ##               <factor> <character>  <character>       <character>
-    ## X7873M.110  Macrophage    Monocyte  Macrophages        Macrophage
-    ## X7873M.121  Macrophage    Monocyte    Monocytes        Macrophage
-    ## X7873M.213  Macrophage  Macrophage  Macrophages        Macrophage
-    ## X7873M.643  Macrophage  Macrophage  Macrophages        Macrophage
-    ## X7882M.285  Macrophage    Monocyte    Monocytes        Macrophage
-    ## ...                ...         ...          ...               ...
-    ## X7892M.774  Macrophage    Monocyte    Monocytes        Macrophage
-    ## X7892M.84   Macrophage  Macrophage  Macrophages        Macrophage
-    ## X7990M2.258    Unknown     T_cells CD4+ T-cells        CD4 T cell
-    ## X7990M2.280 Macrophage    Monocyte  Macrophages        Macrophage
-    ## X7990M2.42          NK      B_cell      B-cells            B cell
-    ##             celltype_CHETAH
-    ##                 <character>
-    ## X7873M.110       Macrophage
-    ## X7873M.121       Macrophage
-    ## X7873M.213       Macrophage
-    ## X7873M.643       Unassigned
-    ## X7882M.285       Macrophage
-    ## ...                     ...
-    ## X7892M.774       Macrophage
-    ## X7892M.84        Macrophage
-    ## X7990M2.258      Unassigned
-    ## X7990M2.280      Macrophage
-    ## X7990M2.42           B cell
-
-``` r
-show(sort(table(colData(ovarian.sce)$celltype_CHETAH), decreasing=TRUE))
-```
-
-    ## 
-    ## Macrophage Unassigned CD4 T cell  Dendritic      Node9      Node5 
-    ##        706        204         90         34         32         27 
-    ##      Node7      Node8         NK CD8 T cell      Node1      Node2 
-    ##         27         22         19         15         12          6 
-    ##     B cell      Node6      Node3     Plasma 
-    ##          2          2          1          1
-
-## CHETAH visualization
-
-Since the CHETAH method is so inherenty dependent on the classification
-tree, it has its own routine to visualize both at the same time.
-
-``` r
-## There may still be a small bug in CHETAH: if things don't work, 
-## please use the following code before continuing
-pca.save <- ovarian.sce@reducedDims@listData$PCA
-ovarian.sce@reducedDims@listData$PCA <- NULL
-ovarian.sce@reducedDims@listData$PCA <- pca.save[,1:2]
-## end of workaround
-
-dim.red.u <- toupper(dim.red) # CHETAH uses upper case TSNE, UMAP, etc.
-PlotCHETAH(ovarian.sce, redD=dim.red.u)
-```
-
-![](celltypeid_files/figure-gfm/plotchetah-1.png)<!-- -->
-
-Grey dots are cells that got an intermediate classification, here called
-Unassigned, Node1, Node2 etc. You can immediately see the four clusters
-that could not be classified: they are the tumor cells. A check with the
-author classification confirms this:
-
-``` r
-p1 <- DimPlot(ovarian, group.by='celltypes', reduction=dim.red)
-p2 <- PlotCHETAH(ovarian.sce, redD=dim.red.u, tree=FALSE, return=TRUE)
-plot_grid(p1, p2, ncol=2, labels=c("publ", "chet"))
-```
-
-![](celltypeid_files/figure-gfm/plot_chetahVSpubl-1.png)<!-- -->
-
-SingleR doesn’t know CHETAH’s intermediate types, so using SingleR with
-CHETAH’s reference gives different (and misleading) results:
-
-``` r
-p1 <- DimPlot(ovarian, group.by='celltypes', reduction=tolower(dim.red))
-p2 <- DimPlot(ovarian, group.by="snglr_chetah_type", reduction=tolower(dim.red))
-p3 <- PlotCHETAH(ovarian.sce, redD=dim.red.u, tree=FALSE, return=TRUE)
-plot_grid(p1, p2, p3, ncol=3, labels=c("publ", "sng_chet", "chet"))
-```
-
-![](celltypeid_files/figure-gfm/plot_chetahVSsingler-1.png)<!-- -->
-
-To see the details of the intermediate classifications more clearly you
-can invert the color scheme using the `interm` option. The malignant
-cells stand out even more clearly this way.
-
-``` r
-p2 <- PlotCHETAH(ovarian.sce, redD=dim.red.u, interm=TRUE, tree=FALSE, return=TRUE)
-plot_grid(p1, p2, ncol=2, labels=c("publ", "chet"))
-```
-
-![](celltypeid_files/figure-gfm/plot_interm-1.png)<!-- -->
-
-The dendritic cell type calls also look a bit more suspect. We can play
-with the classification threshold (the default is 0.1) By setting it to
-0, we force all cells to be classified to a final type; no intermediates
-will occur then. Adjusting the threshold parameter is done with the
-`Classify` function (this is very fast). Play with it. E.g., you’ll see
-that the dendritic calls from the original publication may be in fact be
-plausible but were missed by SingleR. (But also keep track of what
-happens with the types of the tumor cells\!)
-
-``` r
-threshold <- 0.0
-ovarian.sce <- Classify(ovarian.sce, thresh=threshold)
-## note: this overrides previous celltype_CHETAH, but is very fast anyway
-p2 <- PlotCHETAH(ovarian.sce, redD=dim.red.u, interm=FALSE, tree=FALSE, return=TRUE)
-plot_grid(p1, p2, ncol=2, labels=c("publ", "chet"))
-```
-
-![](celltypeid_files/figure-gfm/plot_diff_confidence-1.png)<!-- -->
-
-# CHETAHshiny
-
-CHETAH comes with a nice [Shiny](https://shiny.rstudio.com) app that
-makes it easy to explore the classification. It makes R start a little
-web application that you can interact with in your web browser.
-
-## Launching
-
-When calling `CHETAHshiny()`, it should say something like “Listening on
-<http://127.0.0.1:5433>” and automatically launch your web browser. If
-not, manually open the URL just given in the web browser yourself. In
-RStudio, you may need to click ‘Open in Browser’ on top of the
-Rstudio-window. The R session itself will produce copious amounts of
-warnings which you can ignore. It can take up to 10 seconds or so to
-become active; it may help to click a few of the buttons.
-
-    CHETAHshiny(ovarian.sce, redD=dim.red.u)
-
-## Explanation of the CHETAHshiny interface
-
-The left column / margin shows parameters and thresholds that can be
-chosen. The top row shows which views there are. Many of the elements
-are clickable or provide info when you hover over them.
-
-## Classification tab
-
-Shows the final classification and, further down, the statistics per
-cell type and the classification tree that was used (colors are
-consistent).
-
-  - you can zoom in, pan, hover, etc. Single-click a cell type
-    adds/removes cells of that type from view. Double-click to show just
-    that celltype or return to showing all cells
-  - ‘Color the intermediate types’ has the same effect as
-    `PlotCHETAH(..., interm=TRUE`, …)
-  - The confidence score works as `Classify(..., thresh=some.value,
-    ...)`
-
-## Confidence scores tab:
-
-The confidence score of cell in CHETAH represents the amount of evidence
-that is available to continue classifying that cell further down the
-classificatin tree. `Choose a node` (see the tree at the bottom) shows
-only the cells classified to the specified node or more specific
-(i.e. further down), and uses color to represent the confidence. The
-fainter the color, the less evidence remains to continue making that
-cell’s type more specific. The confidence score is, by definition,
-positive, but here, negative values and colorscale are used to show
-which of the two branches, if any, is to be taken by the cells in that
-node. The colorcode is the same as shown in the tree under it. The
-Profile score heatmap shows the corresponding profile scores (see below)
-
-Raising the `confidence threshold` results in fewer cells ‘reaching’ the
-selected node, so fewer cells will show up.
-
-## Profile score tab:
-
-The profile score in CHETAH represents the similarity of cell in a
-particular node to any of the final types. If the confidence score (see
-above) is not below the threshold, the branch containing the cell type
-having the highest porfile score is taken. The classification tree is
-again shown at the bottoom.
-
-Note that the profile score can be negative, but still he the highest in
-a particular node. E.g., the Macrophage score of many the macrophages in
-Node8 is negative, but mostly less so than the dendritics. If the
-confidence score still exceeds the threshold, the branch containing
-Macrophage would still be chosen.
-
-This plot always shows all points, regardless of confidence threshold
-(and colors are also independent of this).
-
-‘In a boxplot’ panel: unfortunately broken currently.
-
-## Genes used by CHETAH tab:
-
-In each node and for each final type in that node, CHETAH uses the 200
-genes that have the maximum absolute difference in expression between
-that final type, and the average of all the types in the other branch to
-calculate the profiles scores. If you set ‘\# of genes’ in this plot to
-200, the heat map will show you the mRNA counts in the input data, of
-these 200 genes, for the selected node and cell type. If you select
-fewer genes it will show (of these 200 genes) the most highly expressed
-genes in the input (this is the default), or if `Genes with max.
-difference in the INPUT` is unticked, the 200 genes most highly
-expressed in the reference. `Scale Matrix` will normalize the genes for
-better visualisation.
-
-The tree is again shown at the bottom.
-
-If you check e.g Node6 (the one that separates CD4 and CD8 cells), you
-should appreciate that using marker genes (`CD4` and `CD8A`
-respectively; can you spot them?) is not going to work: the data is
-noisy, expression is low and the differences in expression of the
-classical canonical marker genes is miniscule. You need extra evidence
-in the form of extra genes.
-
-(More cells than strictly relevant are shown.)
-
-## Expression per gene tab: obvious
 
 ### Session info
+```
 
 ``` r
 sessionInfo()
 ```
 
-    ## R version 3.5.1 (2018-07-02)
-    ## Platform: x86_64-apple-darwin16.7.0 (64-bit)
-    ## Running under: macOS Sierra 10.12.6
+    ## R version 4.1.0 (2021-05-18)
+    ## Platform: x86_64-apple-darwin20.3.0 (64-bit)
+    ## Running under: macOS Big Sur 11.2.3
     ## 
     ## Matrix products: default
-    ## BLAS: /Users/philip/local/Cellar/r/3.5.1/lib/R/lib/libRblas.dylib
-    ## LAPACK: /Users/philip/local/Cellar/r/3.5.1/lib/R/lib/libRlapack.dylib
+    ## BLAS:   /Users/philiplijnzaad/local/Cellar/openblas/0.3.17/lib/libopenblasp-r0.3.17.dylib
+    ## LAPACK: /Users/philiplijnzaad/local/Cellar/r/4.1.0/lib/R/lib/libRlapack.dylib
     ## 
     ## locale:
     ## [1] C
     ## 
     ## attached base packages:
-    ## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
-    ## [8] methods   base     
+    ## [1] stats4    stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ##  [1] cowplot_0.9.4               SingleR_0.2.2              
-    ##  [3] Matrix_1.2-17               CHETAH_1.1.1               
-    ##  [5] ggplot2_3.1.1               Seurat_3.0.1               
-    ##  [7] SingleCellExperiment_1.4.1  SummarizedExperiment_1.12.0
-    ##  [9] DelayedArray_0.8.0          BiocParallel_1.16.6        
-    ## [11] matrixStats_0.54.0          Biobase_2.42.0             
-    ## [13] GenomicRanges_1.34.0        GenomeInfoDb_1.18.2        
-    ## [15] IRanges_2.16.0              S4Vectors_0.20.1           
-    ## [17] BiocGenerics_0.28.0        
+    ##  [1] celldex_1.4.0               cowplot_1.1.1               SingleR_1.8.0               Matrix_1.3-4                CHETAH_1.9.0                ggplot2_3.3.5               SeuratObject_4.0.3          Seurat_4.0.5                SingleCellExperiment_1.16.0 SummarizedExperiment_1.24.0 Biobase_2.54.0              GenomicRanges_1.46.0        GenomeInfoDb_1.30.0         IRanges_2.28.0              S4Vectors_0.32.2            BiocGenerics_0.40.0         MatrixGenerics_1.6.0        matrixStats_0.61.0         
     ## 
     ## loaded via a namespace (and not attached):
-    ##   [1] corrplot_0.84          plyr_1.8.4             igraph_1.2.4.1        
-    ##   [4] lazyeval_0.2.2         GSEABase_1.44.0        splines_3.5.1         
-    ##   [7] listenv_0.7.0          digest_0.6.18          foreach_1.4.4         
-    ##  [10] htmltools_0.3.6        viridis_0.5.1          gdata_2.18.0          
-    ##  [13] memoise_1.1.0          magrittr_1.5           doParallel_1.0.14     
-    ##  [16] cluster_2.0.9          ROCR_1.0-7             limma_3.38.3          
-    ##  [19] globals_0.12.4         annotate_1.60.1        doFuture_0.8.0        
-    ##  [22] R.utils_2.8.0          colorspace_1.4-1       blob_1.1.1            
-    ##  [25] ggrepel_0.8.1          xfun_0.6               dplyr_0.8.1           
-    ##  [28] crayon_1.3.4           RCurl_1.95-4.12        jsonlite_1.6          
-    ##  [31] graph_1.60.0           iterators_1.0.10       survival_2.44-1.1     
-    ##  [34] zoo_1.8-5              ape_5.3                glue_1.3.1            
-    ##  [37] gtable_0.3.0           zlibbioc_1.28.0        XVector_0.22.0        
-    ##  [40] kernlab_0.9-27         future.apply_1.2.0     prabclus_2.2-7        
-    ##  [43] DEoptimR_1.0-8         scales_1.0.0           pheatmap_1.0.12       
-    ##  [46] mvtnorm_1.0-10         edgeR_3.24.3           DBI_1.0.0             
-    ##  [49] bibtex_0.4.2           Rcpp_1.0.1             metap_1.1             
-    ##  [52] viridisLite_0.3.0      xtable_1.8-4           reticulate_1.12       
-    ##  [55] bit_1.1-14             rsvd_1.0.0             mclust_5.4.3          
-    ##  [58] SDMTools_1.1-221.1     GSVA_1.30.0            tsne_0.1-3            
-    ##  [61] htmlwidgets_1.3        httr_1.4.0             gplots_3.0.1.1        
-    ##  [64] RColorBrewer_1.1-2     fpc_2.1-10             modeltools_0.2-22     
-    ##  [67] ica_1.0-2              pkgconfig_2.0.2        XML_3.98-1.19         
-    ##  [70] R.methodsS3_1.7.1      flexmix_2.3-15         nnet_7.3-12           
-    ##  [73] locfit_1.5-9.1         labeling_0.3           tidyselect_0.2.5      
-    ##  [76] rlang_0.3.4            reshape2_1.4.3         later_0.8.0           
-    ##  [79] AnnotationDbi_1.44.0   pbmcapply_1.4.1        munsell_0.5.0         
-    ##  [82] tools_3.5.1            RSQLite_2.1.1          ggridges_0.5.1        
-    ##  [85] evaluate_0.13          stringr_1.4.0          yaml_2.2.0            
-    ##  [88] bioDist_1.54.0         npsurv_0.4-0           outliers_0.14         
-    ##  [91] knitr_1.22             bit64_0.9-7            fitdistrplus_1.0-14   
-    ##  [94] robustbase_0.93-4      caTools_1.17.1.2       purrr_0.3.2           
-    ##  [97] RANN_2.6.1             dendextend_1.10.0      pbapply_1.4-0         
-    ## [100] future_1.12.0          nlme_3.1-139           whisker_0.3-2         
-    ## [103] mime_0.6               R.oo_1.22.0            shinythemes_1.1.2     
-    ## [106] compiler_3.5.1         plotly_4.9.0           png_0.1-7             
-    ## [109] lsei_1.2-0             geneplotter_1.60.0     tibble_2.1.1          
-    ## [112] stringi_1.4.3          lattice_0.20-38        trimcluster_0.1-2.1   
-    ## [115] pillar_1.3.1           Rdpack_0.11-0          lmtest_0.9-37         
-    ## [118] data.table_1.12.2      bitops_1.0-6           irlba_2.3.3           
-    ## [121] gbRd_0.4-11            httpuv_1.5.1           R6_2.4.0              
-    ## [124] promises_1.0.1         KernSmooth_2.23-15     gridExtra_2.3         
-    ## [127] codetools_0.2-16       MASS_7.3-51.4          gtools_3.8.1          
-    ## [130] assertthat_0.2.1       withr_2.1.2            sctransform_0.2.0     
-    ## [133] GenomeInfoDbData_1.2.0 diptest_0.75-7         grid_3.5.1            
-    ## [136] tidyr_0.8.3            class_7.3-15           rmarkdown_1.12        
-    ## [139] Rtsne_0.15             singscore_1.2.2        shiny_1.3.2
+    ##   [1] utf8_1.2.2                    reticulate_1.22               tidyselect_1.1.1              RSQLite_2.2.8                 AnnotationDbi_1.56.2          htmlwidgets_1.5.4             grid_4.1.0                    BiocParallel_1.28.0           Rtsne_0.15                    munsell_0.5.0                 ScaledMatrix_1.2.0            codetools_0.2-18              ica_1.0-2                     future_1.23.0                 miniUI_0.1.1.1                withr_2.4.2                   colorspace_2.0-2              bioDist_1.66.0                filelock_1.0.2                highr_0.9                     knitr_1.36                    ROCR_1.0-11                   tensor_1.5                    listenv_0.8.0                 labeling_0.4.2                GenomeInfoDbData_1.2.7        polyclip_1.10-0               bit64_4.0.5                   farver_2.1.0                  pheatmap_1.0.12               parallelly_1.28.1             vctrs_0.3.8                   generics_0.1.1               
+    ##  [34] xfun_0.28                     BiocFileCache_2.2.0           R6_2.5.1                      rsvd_1.0.5                    bitops_1.0-7                  spatstat.utils_2.2-0          cachem_1.0.6                  DelayedArray_0.20.0           assertthat_0.2.1              promises_1.2.0.1              scales_1.1.1                  gtable_0.3.0                  beachmat_2.10.0               globals_0.14.0                goftest_1.2-3                 rlang_0.4.12                  splines_4.1.0                 lazyeval_0.2.2                spatstat.geom_2.3-0           BiocManager_1.30.16           yaml_2.2.1                    reshape2_1.4.4                abind_1.4-5                   httpuv_1.6.3                  tools_4.1.0                   ellipsis_0.3.2                gplots_3.1.1                  spatstat.core_2.3-1           RColorBrewer_1.1-2            ggridges_0.5.3                Rcpp_1.0.7                    plyr_1.8.6                    sparseMatrixStats_1.6.0      
+    ##  [67] zlibbioc_1.40.0               purrr_0.3.4                   RCurl_1.98-1.5                rpart_4.1-15                  deldir_1.0-6                  pbapply_1.5-0                 viridis_0.6.2                 zoo_1.8-9                     ggrepel_0.9.1                 cluster_2.1.2                 magrittr_2.0.1                data.table_1.14.2             RSpectra_0.16-0               scattermore_0.7               lmtest_0.9-39                 RANN_2.6.1                    fitdistrplus_1.1-6            patchwork_1.1.1               mime_0.12                     evaluate_0.14                 xtable_1.8-4                  gridExtra_2.3                 compiler_4.1.0                tibble_3.1.6                  KernSmooth_2.23-20            crayon_1.4.2                  htmltools_0.5.2               mgcv_1.8-38                   later_1.3.0                   tidyr_1.1.4                   DBI_1.1.1                     ExperimentHub_2.2.0           corrplot_0.91                
+    ## [100] dbplyr_2.1.1                  MASS_7.3-54                   rappdirs_0.3.3                parallel_4.1.0                igraph_1.2.8                  pkgconfig_2.0.3               plotly_4.10.0                 spatstat.sparse_2.0-0         XVector_0.34.0                stringr_1.4.0                 digest_0.6.28                 sctransform_0.3.2             RcppAnnoy_0.0.19              spatstat.data_2.1-0           Biostrings_2.62.0             rmarkdown_2.11                leiden_0.3.9                  dendextend_1.15.2             uwot_0.1.10                   DelayedMatrixStats_1.16.0     curl_4.3.2                    shiny_1.7.1                   gtools_3.9.2                  lifecycle_1.0.1               nlme_3.1-153                  jsonlite_1.7.2                BiocNeighbors_1.12.0          viridisLite_0.4.0             fansi_0.5.0                   pillar_1.6.4                  lattice_0.20-45               KEGGREST_1.34.0               fastmap_1.1.0                
+    ## [133] httr_1.4.2                    survival_3.2-13               interactiveDisplayBase_1.32.0 glue_1.5.0                    png_0.1-7                     BiocVersion_3.14.0            bit_4.0.4                     stringi_1.7.5                 blob_1.2.2                    BiocSingular_1.10.0           AnnotationHub_3.2.0           caTools_1.18.2                memoise_2.0.0                 dplyr_1.0.7                   irlba_2.3.3                   future.apply_1.8.1
